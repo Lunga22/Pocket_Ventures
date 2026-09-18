@@ -28,9 +28,20 @@ body {
   justify-content: center;
   min-height: 100vh;
   -webkit-font-smoothing: antialiased;
-   
+  font-size: 16px; /* Comfortable reading size for mobile */
 }
 
+h1 {
+  font-size: 1.5rem; /* Scales relative to the base size */
+}
+
+input, button, select {
+  font-size: 1rem;
+  padding: 12px;
+  width: 100%;
+  box-sizing: border-box;
+  margin-bottom: 12px;
+}
 .app-shell {
   width: 100%;
   max-width: 650px;
