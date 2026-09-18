@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PocketVentures — Offline Merchant Engine</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#0f172a">
+  <!-- HTML5 QR / Barcode Scanner Engine -->
+  <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+</head
+<body>
+
+<nav class="sidebar">
+  <!-- Top Brand & Active Profile -->
+  <div class="sidebar-header">
+    <div class="brand-badge">
+      <span class="pos-icon">POS</span>
+      <div class="brand-text">
+        <h3>Retail Command</h3>
+        <span class="badge-offline">Offline Workspace</span>
+      </div>
+    </div>
+    
+    <div class="user-profile-box">
+      <div class="user-avatar">L</div>
+      <div class="user-info">
+        <span class="user-label">Operator / Admin</span>
+        <span class="user-name">LunTech</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Navigation Groups -->
+  <div class="sidebar-nav-scroll">
+    <div class="nav-group-title">CONTROL</div>
+    <ul class="nav-links">
+      <li><a href="#" class="nav-item active" data-target="dashboard-view">📊 POS Dashboard</a></li>
+      <li><a href="#" class="nav-item" data-target="sell-view">🛒 Point of Sale</a></li>
+      <li><a href="#" class="nav-item" data-target="inventory-view">📦 Inventory Management</a></li>
+      <li><a href="#" class="nav-item" data-target="settings-view">⚙️ Settings & Backup</a></li>
+    </ul>
+  </div>
+
+  <!-- Sidebar Footer / Currency Selector -->
+  <div class="sidebar-footer"> </div>
+   
+</nav>
+<main class="main-content">
+  
+<header class="top-user-nav" style="position: fixed; top: 0; right: 4; width: 30%; z-index: 1000; background-color: #0f172a; box-shadow: 0 2px 10px rgba(0,0,0,0.3); display: flex; justify-content: space-between; align-items: center; padding: 10px 20px; box-sizing: border-box;">
+  <div class="user-quick-info">
+    <span class="welcome-text" style="font-size: 0.9rem; color: #94a3b8;">Workspace Active</span>
+  </div>
+  <div class="nav-actions" style="display: flex; gap: 10px;">
+    <button class="btn-utility" onclick="switchView('profile-setup-view')">Profile Setup</button>
+    <button class="btn-primary" onclick="switchView('login-view')" style="padding: 6px 14px; font-size: 0.85rem;">Login / Sync</button>
+  </div>
+</header>
+
+<!-- Profile Setup / Registration View -->
+<section id="profile-setup-view" class="view-section">
+  <div class="card">
+    <div class="card-header">
+      <h2>Profile & Account Setup</h2>
+      <button class="close-view-btn" onclick="switchView('dashboard-view')">✕</button>
+    </div>
+    <form id="profile-form" style="margin-top: 15px;">
+      <div class="input-group">
+        <label>Full Name</label>
+        <input type="text" id="setup-name" placeholder="e.g., Lunga Simelane" required />
+      </div>
+      <div class="input-group">
+        <label>Username</label>
+        <input type="text" id="setup-username" placeholder="e.g., lunga_s" required />
+      </div>
+      <div class="input-group">
+        <label>Email or Phone Number</label>
+        <input type="text" id="setup-contact" placeholder="email@example.com or +268..." required />
+      </div>
+      <div class="input-group">
+        <label>Password</label>
+        <input type="password" id="setup-password" placeholder="Create a secure password" required />
+      </div>
+      <button type="submit" class="btn-primary" style="width: 100%; margin-top: 10px;">Save Profile & Register</button>
+    </form>
+  </div>
+</section>
+
+<!-- Login View -->
+<section id="login-view" class="view-section">
+  <div class="card" style="max-width: 400px; margin: 40px auto;">
+    <div class="card-header">
+      <h2>Operator Login</h2>
+      <button class="close-view-btn" onclick="switchView('dashboard-view')">✕</button>
+    </div>
+    <form id="login-form" style="margin-top: 15px;">
+      <div class="input-group">
+        <label>Email or Username</label>
+        <input type="text" id="login-identifier" placeholder="Enter username or email" required />
+      </div>
+      <div class="input-group">
+        <label>Password</label>
+        <input type="password" id="login-password" placeholder="Enter password" required />
+      </div>
+      <button type="submit" class="btn-primary" style="width: 100%; margin-top: 10px;">Login</button>
+      <p style="text-align: center; margin-top: 15px; font-size: 0.85rem;">
+        <a href="#" onclick="handleForgotPassword(event)" class="contact-link">Forgot Password?</a>
+      </p>
+    </form>
+  </div>
+</section>
+
+  <!-- 2. Point of Sale -->
+  <section id="sell-view" class="view-section">
+    <header class="view-header" style="display: flex; justify-content: space-between; align-items: center;">
+      <div>
+        <h2>Point of Sale Register</h2>
+        <p>Scan items, manage your cart, and check out customers.</p>
+      </div>
+      <button class="close-view-btn" title="Close Section">✕</button>
+    </header>
+    <div class="card">
+      <p>POS register workspace and product grid are active here.</p>
+    </div>
+  </section>
+
+ <!-- Navbar Receipts Section (Unique IDs for Dual Printing) -->
+<section id="receipts-view" class="view-section">
+  <header class="view-header" style="display: flex; justify-content: space-between; align-items: center;">
+    <div>
+      <h2>Receipts</h2>
+      <p>Look up past customer invoices, reprint tickets, or process product returns.</p>
+    </div>
+    <button class="close-view-btn" title="Close Section">✕</button>
+  </header>
+  <div class="card">
+    <div class="card-header" style="display: flex; align-items: center; gap: 10px;">
+      <h3>Archived Receipt Viewer</h3>
+    </div>
+    <div style="margin-top: 15px;">
+      <!-- UNIQUE ID FOR NAVBAR RECEIPT -->
+      <div id="nav-receipt-output" class="receipt-box">
+        <p class="muted">Select a receipt from history or log a new transaction.</p>
+      </div>
+      <div class="receipt-actions" style="margin-top: 12px; display: none;" id="nav-receipt-tools">
+        <button id="nav-native-share-btn" class="btn-secondary">📱 Share Receipt</button>
+        <button id="nav-print-receipt-btn" class="btn-secondary" onclick="window.print()">🖨️ Thermal Print</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Inventory Management Section (Fixed Column Order) -->
+<section id="inventory-view" class="view-section">
+  <header class="view-header" style="display: flex; justify-content: space-between; align-items: center;">
+    <div>
+      <h2>Inventory Management</h2>
+      <p>Track stock levels, add new products, and manage stock quantities.</p>
+    </div>
+    <button class="close-view-btn" title="Close Section">✕</button>
+  </header>
+  <div class="card">
+    <table class="data-table" style="margin-top: 15px; width: 100%;">
+      <thead>
+        <tr>
+          <th>Product Name</th>
+          <th>Price</th>
+          <th>Stock Qty</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody id="inventory-table-body">
+        <tr><td colspan="5" style="text-align: center; color: #71717a;">No inventory items logged yet.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+  
+  <!-- 7. Settings & Backup -->
+  <section id="settings-view" class="view-section">
+    <header class="view-header" style="display: flex; justify-content: space-between; align-items: center;">
+      <div>
+        <h2>Settings & Backup</h2>
+        <p>Manage local IndexedDB browser storage, export JSON data backups, and set preferences.</p>
+      </div>
+      <button class="close-view-btn" title="Close Section">✕</button>
+    </header>
+    <div class="card">
+      <h3>Offline Data Management</h3>
+      <p style="color: #71717a; font-size: 0.85rem; margin-bottom: 16px;">All records stay secure locally in your browser with zero server costs.</p>
+      <button id="export-backup-btn" class="btn-secondary">Export JSON Backup</button>
+      <button id="clear-db-btn" class="btn-danger" style="margin-left: 10px;">Clear Local Cache</button>
+    </div>
+  </section>
+
+</main>
+
+<div class="app-shell">
+    <header class="app-header">
+      <div class="brand">
+        <span class="icon">⚡</span>
+        <h1>PocketVentures</h1>
+      </div>
+	  
+      <div class="header-actions">
+        <a href="customers.html" style="text-decoration: none;">
+          <button class="btn-utility">👤Customer Directory</button>
+        </a>
+       
+  <select id="currency-select" class="currency-dropdown">
+  <!-- Southern Africa -->
+  <option value="E">E (SZL - Eswatini Lilangeni / ZAR)</option>
+  <option value="R">R (ZAR - South African Rand)</option>
+  <option value="P">P (BWP - Botswana Pula)</option>
+  <option value="MT">MT (MZN - Mozambican Metical)</option>
+  <option value="N$">N$ (NAD - Namibian Dollar)</option>
+  <option value="ZK">ZK (ZMW - Zambian Kwacha)</option>
+  <option value="KSh">KSh (KES - Kenyan Shilling)</option>
+
+  <!-- West Africa -->
+  <option value="₦">₦ (NGN - Nigerian Naira)</option>
+  <option value="GH₵">GH₵ (GHS - Ghanaian Cedi)</option>
+
+  <!-- East Africa -->
+  <option value="USh">USh (UGX - Ugandan Shilling)</option>
+  <option value="TSh">TSh (TZS - Tanzanian Shilling)</option>
+  <option value="R₣">R₣ (RWF - Rwandan Franc)</option>
+
+  <!-- North & Central Africa -->
+  <option value="E£">E£ (EGP - Egyptian Pound)</option>
+  <option value="CFA">CFA (XOF / XAF - Franc)</option>
+
+  <!-- Global Standards -->
+  <option value="$">$ (USD - US Dollar)</option>
+  <option value="€">€ (EUR - Euro)</option>
+  <option value="£">£ (GBP - British Pound)</option>
+</select>
+	   
+        <button id="checkout-modal-btn" class="btn-primary">Buy Pro Kit</button>
+      </div>
+    </header>
+
+    <main class="dashboard">
+      <!-- 1. Financial Analytics Overview (Collapsible) -->
+      <section class="card stat-card">
+        <div class="card-header" id="toggle-financials" style="cursor: pointer; display: flex; justify-content: space-between; align-items: center;">
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <span id="financials-arrow" style="font-size: 1.2rem; color: #38bdf8; font-weight: bold;">▼</span>
+            <h2>Financial Dashboard</h2>
+          </div>
+          <div style="display: flex; gap: 6px;" onclick="event.stopPropagation()">
+            <button id="export-csv-btn" class="btn-small">CSV Export</button>
+            <button id="export-json-btn" class="btn-small">Backup DB</button>
+            <button id="import-json-trigger-btn" class="btn-small">Restore</button>
+            <input type="file" id="import-json-file" accept=".json" style="display: none;">
+          </div>
+        </div>
+        <div id="financials-content" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: 10px; margin-top: 15px; text-align: center;">
+          <div style="background: rgba(255,255,255,0.05); padding: 10px; border-radius: 8px;">
+            <div class="muted" style="font-size: 0.8rem;">Gross Revenue</div>
+            <div style="font-weight: bold; color: #38bdf8;"><span class="currency-symbol">E</span><span id="total-sales">0.00</span></div>
+          </div>
+          <div style="background: rgba(255,255,255,0.05); padding: 10px; border-radius: 8px;">
+            <div class="muted" style="font-size: 0.8rem;">Total Expenses</div>
+            <div style="font-weight: bold; color: #ef4444;"><span class="currency-symbol">E</span><span id="total-expenses">0.00</span></div>
+          </div>
+          <div style="background: rgba(255,255,255,0.05); padding: 10px; border-radius: 8px;">
+            <div class="muted" style="font-size: 0.8rem;">Net Profit</div>
+            <div style="font-weight: bold; color: #4ade80;"><span class="currency-symbol">E</span><span id="net-profit">0.00</span></div>
+          </div>
+        </div>
+      </section>
+	  
+      <!-- 2. Log Expense Section (Collapsible & Categorized) -->
+      <section class="card">
+        <div class="card-header" id="toggle-expenses" style="cursor: pointer; display: flex; align-items: center; gap: 10px;">
+          <span id="expenses-arrow" style="font-size: 1.2rem; color: #38bdf8; font-weight: bold;">▼</span>
+          <h3>Log Business Expense</h3>
+        </div>
+        <div id="expenses-content" style="margin-top: 15px;">
+          <form id="expense-form" class="inline-form">
+            <div class="input-group">
+              <label for="expense-name">Expense Description</label>
+              <input type="text" id="expense-name" placeholder="e.g., Fabric, Airtime, Freight" required>
+            </div>
+            <div class="input-group">
+              <label for="expense-category">Category</label>
+              <select id="expense-category" class="currency-dropdown" style="width: 100%;">
+                <option value="Materials">Materials & Inventory</option>
+                <option value="Shipping">Shipping & Freight</option>
+                <option value="Marketing">Marketing & Ads</option>
+                <option value="Software">Software & Hosting</option>
+                <option value="Utilities">Utilities & Rent</option>
+                <option value="Other">Other Expenses</option>
+              </select>
+            </div>
+            <div class="input-group">
+              <label for="expense-amount">Amount (<span class="currency-symbol">E</span>)</label>
+              <input type="number" id="expense-amount" step="0.01" placeholder="0.00" required>
+            </div>
+            <button type="submit" class="btn-action" style="background: #dc2626;">Log Expense</button>
+          </form>
+
+          <div class="inventory-list-container" style="margin-top: 15px;">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Description</th>
+                  <th>Amount</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="expense-table-body">
+                <tr>
+                  <td colspan="5" class="muted">No expenses logged yet.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+   
+
+      <!-- 4. Advanced Sales & AI Input (Collapsible) -->
+      <section class="card">
+        <div class="card-header" id="toggle-sales" style="cursor: pointer; display: flex; justify-content: space-between; align-items: center;">
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <span id="sales-arrow" style="font-size: 1.2rem; color: #38bdf8; font-weight: bold;">▼</span>
+            <h3>Log Transaction</h3>
+          </div>
+          <div class="tools-inline" onclick="event.stopPropagation()">
+            <button id="voice-input-btn" class="btn-utility" title="Voice AI Dictation">🎤 Dictate</button>
+            <button id="camera-scan-btn" class="btn-utility" title="Barcode Scanner">📷 Scan</button>
+          </div>
+        </div>
+
+        <div id="sales-content" style="margin-top: 15px;">
+          <!-- Camera Scanner View -->
+          <div id="qr-reader" style="width: 100%; display: none; margin-bottom: 12px;"></div>
+
+          <form id="sale-form">
+            <div class="grid-2-col" style="margin-bottom: 12px;">
+              <div class="input-group" style="margin-bottom: 0;">
+                <label for="sale-customer-select">Link Customer (Optional)</label>
+                <select id="sale-customer-select" class="currency-dropdown" style="width: 100%;">
+                  <option value="Walk-in Guest">Walk-in Guest</option>
+                </select>
+              </div>
+              <div class="input-group" style="margin-bottom: 0;">
+                <label for="item-name">Description / Product</label>
+                <input type="text" id="item-name" placeholder="e.g., Satin Bonnet" required>
+              </div>
+            </div>
+
+            <div class="grid-3-col" style="margin-bottom: 12px;">
+              <div class="input-group" style="margin-bottom: 0;">
+                <label for="item-qty">Qty Sold</label>
+                <input type="number" id="item-qty" value="1" min="1" required>
+              </div>
+              <div class="input-group" style="margin-bottom: 0;">
+                <label for="item-price">Total Amount (<span class="currency-symbol">E</span>)</label>
+                <input type="number" id="item-price" step="0.01" placeholder="80.00" required>
+              </div>
+              <div class="input-group" style="margin-bottom: 0;">
+                <label for="payment-method">Payment Method</label>
+                <select id="payment-method" class="currency-dropdown" style="width: 100%;">
+                  <option value="Cash">Cash</option>
+                  <option value="Card">Credit / Debit Card</option>
+                  <option value="Digital Wallet">Digital Wallet (Apple/Google/PayPal)</option>
+                  <option value="Bank Transfer">Bank Transfer / Wire</option>
+                  <option value="Mobile Money">Mobile Money / MoMo</option>
+                </select>
+              </div>
+            </div>
+            <button type="submit" class="btn-action">Log Sale & Issue Receipt</button>
+          </form>
+        </div>
+      </section>
+
+      <!-- 5. Live Digital Receipt (Collapsible) -->
+      <section class="card">
+        <div class="card-header" id="toggle-receipt" style="cursor: pointer; display: flex; align-items: center; gap: 10px;">
+          <span id="receipt-arrow" style="font-size: 1.2rem; color: #38bdf8; font-weight: bold;">▼</span>
+          <h3>Live Digital Receipt</h3>
+        </div>
+        <div id="receipt-content" style="margin-top: 15px;">
+          <div id="receipt-output" class="receipt-box">
+            <p class="muted">No recent transaction. Log an item above.</p>
+          </div>
+          <div class="receipt-actions" style="margin-top: 12px; display: none;" id="receipt-tools">
+            <button id="native-share-btn" class="btn-secondary">📱 Share Receipt</button>
+            <button id="print-receipt-btn" class="btn-secondary" onclick="window.print()">🖨️ Thermal Print</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- 6. End-of-Day Shift Reconciliation (Collapsible) -->
+      <section class="card">
+        <div class="card-header" id="toggle-reconciliation" style="cursor: pointer; display: flex; justify-content: space-between; align-items: center;">
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <span id="reconciliation-arrow" style="font-size: 1.2rem; color: #38bdf8; font-weight: bold;">▼</span>
+            <h3>End-of-Day Shift Reconciliation</h3>
+          </div>
+          <span id="eod-date-badge" class="badge-info">Today</span>
+        </div>
+        
+        <div id="reconciliation-content" style="margin-top: 15px;">
+          <div class="grid-2-col" style="margin-bottom: 15px;">
+            <div class="input-group" style="margin-bottom: 0;">
+              <label for="cash-counted">Actual Cash Counted (<span class="currency-symbol">E</span>)</label>
+              <input type="number" id="cash-counted" step="0.01" placeholder="0.00">
+            </div>
+            <div class="input-group" style="margin-bottom: 0;">
+              <label for="opening-float">Opening Float (<span class="currency-symbol">E</span>)</label>
+              <input type="number" id="opening-float" step="0.01" placeholder="0.00" value="0.00">
+            </div>
+          </div>
+
+          <div class="receipt-box" style="color: var(--text-main); font-family: inherit;">
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px; margin-bottom: 10px;">
+              <div>
+                <small class="muted">POS Sales Revenue</small>
+                <div style="font-size: 1.1rem; font-weight: bold; color: #4ade80;"><span class="currency-symbol">E</span><span id="eod-pos-total">0.00</span></div>
+              </div>
+              <div>
+                <small class="muted">Deposits Collected</small>
+                <div style="font-size: 1.1rem; font-weight: bold; color: #38bdf8;"><span class="currency-symbol">E</span><span id="eod-deposits-total">0.00</span></div>
+              </div>
+              <div>
+                <small class="muted">Expenses Paid</small>
+                <div style="font-size: 1.1rem; font-weight: bold; color: #ef4444;"><span class="currency-symbol">E</span><span id="eod-expenses-total">0.00</span></div>
+              </div>
+              <div>
+                <small class="muted">Expected Drawer Cash</small>
+                <div style="font-size: 1.1rem; font-weight: bold;"><span class="currency-symbol">E</span><span id="eod-expected-cash">0.00</span></div>
+              </div>
+            </div>
+            <hr style="border: 0; border-top: 1px dashed var(--border); margin: 8px 0;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <strong>Cash Over/Short:</strong>
+              <span id="eod-variance" style="font-size: 1.1rem; font-weight: bold;"><span class="currency-symbol">E</span>0.00</span>
+            </div>
+          </div>
+
+          <button class="btn-action" onclick="window.print()" style="margin-top: 15px; background: #6366f1;">🖨️ Print Daily Shift Report</button>
+        </div>
+      </section>
+    </main>
+  </div>
+   
+  <script src="app.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</body>
+</html>
