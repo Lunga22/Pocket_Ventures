@@ -8,7 +8,7 @@ An offline-first, local-first Point of Sale (POS) and inventory management web a
 * **Inventory Management:** Add, track, and manage stock items with clean form validation and real-time 4-column table rendering.
 * **Pinned Navigation:** Features a fixed viewport header to keep core navigation controls accessible at all times during scrolling.
 * **PWA Ready:** Fully installable as a Progressive Web App on desktop or mobile devices with custom app icons and manifest configuration.
-
+👉 **[Get PocketVentures POS on Selar](https://selar.com/swado876w9)**
 ## 🛠️ Tech Stack
 
 * **Frontend:** HTML5, CSS3, JavaScript (Vanilla ES6+)
